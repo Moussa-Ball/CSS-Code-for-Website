@@ -36,11 +36,18 @@
     }
 
     function syncHeights(){
-      const first = words[0];
-      const computed = Math.max(first.getBoundingClientRect().height, parseFloat(getComputedStyle(first).lineHeight) || 0);
-      const h = computed || 40;
+      // Mesure robuste : parcourir tous les mots pour déterminer la hauteur max (gère wrapping)
+      let max = 0;
+      words.forEach(w=>{
+        w.style.height = 'auto'; // reset pour mesurer la hauteur naturelle
+        const h = Math.max(w.getBoundingClientRect().height, parseFloat(getComputedStyle(w).lineHeight) || 0);
+        if(h > max) max = h;
+      });
+      const h = Math.ceil(max) || 40; // hauteur entière pour éviter les sous-pixels
       viewport.style.height = h + 'px';
       words.forEach(w=> w.style.height = h + 'px');
+      // Indiquer au navigateur d'optimiser les transformations
+      list.style.willChange = 'transform';
       list.style.transition = `transform ${transition}ms ease`;
     }
 
@@ -48,7 +55,8 @@
       if(index >= words.length - 1) return;
       mainTimer = setTimeout(()=>{
         index++;
-        list.style.transform = `translateY(-${index * viewport.clientHeight}px)`;
+        const y = Math.round(index * viewport.clientHeight);
+        list.style.transform = `translate3d(0, -${y}px, 0)`;
         postTransitionTimer = setTimeout(()=>{
           if(!paused) scheduleTransform();
         }, transition);
@@ -82,14 +90,16 @@
 
       window.addEventListener('resize', ()=>{
         syncHeights();
-        list.style.transform = `translateY(-${index * viewport.clientHeight}px)`;
+        const y = Math.round(index * viewport.clientHeight);
+        list.style.transform = `translate3d(0, -${y}px, 0)`;
       });
     }
 
     function revealAndStart(){
       // ensure first word visible
       index = 0;
-      list.style.transform = `translateY(-${index * viewport.clientHeight}px)`;
+      const y = Math.round(index * viewport.clientHeight);
+      list.style.transform = `translate3d(0, -${y}px, 0)`;
       // reveal container after sizes are known
       container.classList.add('js-ready');
       // start the rotation chain
@@ -105,5 +115,3 @@
     }
   });
 })();
-
-

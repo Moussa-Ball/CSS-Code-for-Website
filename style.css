@@ -25,6 +25,7 @@
 .aptr-rotator .rotator__list{
     display: block;
     transform: translateY(0);
+    will-change: transform;
 }
 .aptr-rotator .rotator__word{
     display: block;
@@ -33,6 +34,8 @@
     line-height: 1;
     font-weight: 600;
     font-size: 2.5rem;
+    /* par défaut, empêcher le wrapping pour garder des hauteurs cohérentes */
+    white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce){
