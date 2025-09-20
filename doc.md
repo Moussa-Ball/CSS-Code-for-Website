@@ -4,7 +4,7 @@ This document explains, step-by-step and with copy-paste snippets, how your clie
 
 Option A — Recommended (host files externally; most reliable)
 
-1) I can host `style.css` and `script.js` for you (or you can host them). If I host them I'll provide two HTTPS URLs.
+1) Host `style.css` and `script.js` files on a CDN or reliable hosting service, and reference them via their URLs.
 
 2) In Squarespace admin go to **Settings → Advanced → Code Injection**.
 
